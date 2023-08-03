@@ -1,0 +1,392 @@
+--VIEW1
+
+Create or Replace View PAG_NOTICIA as
+Select
+    N.NOME_NOTICIA, 
+    A.NOME_AUTOR,
+    C.NOME_CATEGORIA,
+    S.SUBCATEGORIA_NOME
+    FROM NOTICIA N
+    INNER JOIN AUTOR A on (A.ID_AUTOR = N.ID_NOTICIA)
+    INNER JOIN CATEGORIA C on (C.ID_CATEGORIA = N.ID_NOTICIA)
+    INNER JOIN SUBCATEGORIA S on (S.ID_SUBCATEGORIA = N.ID_NOTICIA);
+    
+    SELECT * FROM PAG_NOTICIA;
+
+--VIEW2
+
+Create or Replace View AUTOR_NOTICIA as
+Select
+    A.NOME_AUTOR,
+    C.NOME_CATEGORIA
+
+    FROM AUTOR A
+    INNER JOIN NOTICIA N on (N.ID_AUTOR = A.ID_AUTOR)
+    INNER JOIN CATEGORIA C on (C.ID_CATEGORIA = N.ID_CATEGORIA);
+    
+    SELECT * FROM AUTOR_NOTICIA;
+
+--PROCEDURE1
+
+CREATE OR REPLACE PROCEDURE NOME_Email
+ 
+IS
+ 
+ NOME VARCHAR2(400);
+
+ CURSOR FUNC IS
+           SELECT FIRST_USUARIO || ' ' || LAST_USUARIO || '   ' || Email_USUARIO
+           FROM USUARIO;
+   BEGIN
+   OPEN FUNC;
+   LOOP
+      FETCH FUNC INTO NOME;
+      DBMS_OUTPUT.PUT_LINE(NOME);
+   EXIT WHEN FUNC%NOTFOUND;
+   END LOOP;
+   CLOSE FUNC;
+ END;
+
+EXEC NOME_EMAIL;
+
+--PROCEDURE2
+
+CREATE OR REPLACE PROCEDURE NOME_CPF
+ 
+IS
+ 
+ NOME VARCHAR2(400);
+
+ CURSOR FUNC IS
+           SELECT FIRST_USUARIO || ' ' || LAST_USUARIO || '   ' || CPF_USUARIO
+           FROM USUARIO;
+   BEGIN
+   OPEN FUNC;
+   LOOP
+      FETCH FUNC INTO NOME;
+      DBMS_OUTPUT.PUT_LINE(NOME);
+   EXIT WHEN FUNC%NOTFOUND;
+   END LOOP;
+   CLOSE FUNC;
+ END;
+
+EXEC NOME_CPF;
+
+--PROCEDURE3
+
+CREATE OR REPLACE PROCEDURE NOME_CPF
+ 
+IS
+ 
+ NOME VARCHAR2(400);
+
+ CURSOR FUNC IS
+           SELECT FIRST_USUARIO || ' ' || LAST_USUARIO || '   ' || CPF_USUARIO
+           FROM USUARIO;
+   BEGIN
+   OPEN FUNC;
+   LOOP
+      FETCH FUNC INTO NOME;
+      DBMS_OUTPUT.PUT_LINE(NOME);
+   EXIT WHEN FUNC%NOTFOUND;
+   END LOOP;
+   CLOSE FUNC;
+ END;
+
+EXEC NOME_CPF;
+
+--PROCEDURE4
+
+CREATE OR REPLACE PROCEDURE NOME_TEL
+ 
+IS
+ 
+ NOME VARCHAR2(400);
+
+ CURSOR FUNC IS
+           SELECT FIRST_USUARIO || ' ' || LAST_USUARIO || '   ' || TEL_USUARIO
+           FROM USUARIO;
+   BEGIN
+   OPEN FUNC;
+   LOOP
+      FETCH FUNC INTO NOME;
+      DBMS_OUTPUT.PUT_LINE(NOME);
+   EXIT WHEN FUNC%NOTFOUND;
+   END LOOP;
+   CLOSE FUNC;
+ END;
+
+EXEC NOME_TEL;
+
+
+--TRIGGER1
+
+    create or replace trigger restringir_cpf
+    before update of CPF_USUARIO on USUARIO
+    for each row
+begin
+    if (:new.CPF_USUARIO <> :old.CPF_USUARIO) then
+        raise_application_error(-20202, 'O CPF não pode ser alterado!!');
+    end if;
+end;
+
+update USUARIO set CPF_USUARIO = 58636717017 where id_USUARIO = 9;
+
+--TRIGGER2
+
+
+create or replace trigger altera_valor_assinatura
+    before update of Prec_assinatura on assinatura
+    for each row
+begin   
+    if (:new.Prec_assinatura <> :old.Prec_assinatura) then 
+        dbms_output.put_line('O preço novo da assinatura é: ' || :new.Prec_Assinatura);  
+        dbms_output.put_line('O preço antigo da assinatura era: ' || :old.Prec_assinatura);  
+    end if; 
+end; 
+
+update assinatura set Prec_assinatura=49 where id_assinatura=2;
+
+--TRIGGER3
+
+
+create or replace trigger restringir_id
+    before update of id_USUARIO on USUARIO
+    for each row
+begin
+    if (:new.id_USUARIO <> :old.id_USUARIO) then
+        raise_application_error(-20202, 'O id não pode ser alterado!!');
+    end if;
+end;
+    
+update USUARIO set id_USUARIO = 1 where id_USUARIO = 3;
+
+--TRIGGER4
+
+CREATE OR REPLACE TRIGGER MUD_TEL
+
+BEFORE UPDATE OF TEL_USUARIO ON USUARIO
+
+FOR EACH ROW
+
+BEGIN
+
+IF(:NEW.TEL_USUARIO <> :OLD.TEL_USUARIO) THEN
+DBMS_OUTPUT.PUT_LINE('O novo telefone do cliente ' || :OLD.TEL_USUARIO || 'é: ' || :NEW.TEL_USUARIO);
+
+DBMS_OUTPUT.PUT_LINE('O antigo telefone do cliente ' || :OLD.TEL_USUARIO || ' era: ' || :OLD.TEL_USUARIO);
+
+END IF;
+END;
+
+UPDATE USUARIO SET TEL_USUARIO = 1195373918
+WHERE ID_USUARIO = 4;
+
+SELECT * FROM USUARIO;
+
+--TRIGGER5
+
+create or replace trigger restringir_RG
+    before update of RG_USUARIO on USUARIO
+    for each row
+begin
+    if (:new.RG_USUARIO <> :old.RG_USUARIO) then
+        raise_application_error(-20202, 'O RG não pode ser alterado!!');
+    end if;
+end;
+    
+update USUARIO set RG_USUARIO = 81737647188 where id_USUARIO = 3;
+
+--TRIGGER6
+
+CREATE OR REPLACE TRIGGER MUD_END
+
+BEFORE UPDATE OF END_USUARIO ON
+USUARIO
+FOR EACH ROW
+BEGIN
+
+IF(:NEW.END_USUARIO <> :OLD.END_USUARIO) THEN
+
+DBMS_OUTPUT.PUT_LINE('Novo endereço: ' || :NEW.END_USUARIO);
+
+DBMS_OUTPUT.PUT_LINE('Antigo endereço: ' || :OLD.END_USUARIO);
+
+END IF;
+
+END;
+
+UPDATE USUARIO SET END_USUARIO = 'Rua Sergipe 600'
+WHERE ID_USUARIO = 10;
+
+SELECT * FROM USUARIO;
+
+--TRIGGER7
+
+create or replace trigger restringir_cat 
+    before update of NOME_CATEGORIA on CATEGORIA 
+    for each row 
+begin 
+    if (:new.NOME_CATEGORIA <> :old.NOME_CATEGORIA) then 
+        raise_application_error(-20202, 'O nome da categoria não pode ser alterado!!'); 
+    end if; 
+end; 
+
+update CATEGORIA set NOME_CATEGORIA = 'COPA DO MUNDO' where ID_CATEGORIA = 7
+
+--TRIGGER8
+
+create or replace trigger restringir_subcat 
+    before update of SUBCATEGORIA_NOME on SUBCATEGORIA 
+    for each row 
+begin 
+    if (:new.SUBCATEGORIA_NOME <> :old.SUBCATEGORIA_NOME) then 
+        raise_application_error(-20202, 'O nome da subcategoria não pode ser alterado!!'); 
+    end if; 
+end;
+
+update SUBCATEGORIA set SUBCATEGORIA_NOME = 'PIB PER CAPITA' where ID_CATEGORIA = 3
+
+--TRIGGER 9
+
+create or replace trigger restringir_idade
+    before update of IDADE_AUTOR on AUTOR
+    for each row
+begin
+    if (:new.IDADE_AUTOR <> :old.IDADE_AUTOR) then
+        raise_application_error(-20202, 'A idade do autor não pode ser alterada!!');
+    end if;
+end;
+    
+update AUTOR set IDADE_AUTOR = 99 where ID_AUTOR = 1;
+
+--TRIGGER10
+
+create or replace trigger restringir_dur
+    before update of DUR_VIDEO on VIDEOS
+    for each row
+begin
+    if (:new.DUR_VIDEO <> :old.DUR_VIDEO) then
+        raise_application_error(-20202, 'A duração do vídeo não pode ser alterada!!');
+    end if;
+end;
+    
+update VIDEOS set DUR_VIDEO = 77 where ID_VIDEO = 4;
+
+
+--FUNCTION1
+
+CREATE OR REPLACE FUNCTION formatar_cpf (USUARIO_ID IN NUMBER)
+    RETURN VARCHAR2
+AS
+    cpf_f NUMBER;
+    aux VARCHAR2(15);
+BEGIN
+    SELECT CPF_USUARIO INTO cpf_f FROM USUARIO WHERE ID_USUARIO = USUARIO_ID; 
+    aux := SUBSTR(cpf_f, 1, 3) || '.' || SUBSTR(cpf_f, 4, 3) || '.' || SUBSTR(cpf_f, 7, 3) || '-' || SUBSTR(cpf_f, 10, 2);
+    RETURN aux;
+END;
+
+DECLARE
+    id_usuario NUMBER;
+    cpf_formatar VARCHAR2(15);
+    cursor USERS is
+        SELECT ID_USUARIO FROM USUARIO;
+BEGIN
+    OPEN USERS;
+    LOOP
+        FETCH USERS INTO id_usuario;
+        EXIT WHEN USERS%NOTFOUND;
+        cpf_formatar := formatar_cpf(id_usuario);
+        DBMS_OUTPUT.PUT_LINE('ID_USUARIO ' || ID_USUARIO || ' ' || 'CPF_USUARIO ' || cpf_formatar);
+    END LOOP;
+    CLOSE USERS;
+END;
+
+--FUNCTION2
+
+CREATE OR REPLACE FUNCTION formatar_RG (USUARIO_ID IN NUMBER)
+    RETURN VARCHAR2
+AS
+    RG_G NUMBER;
+    aux VARCHAR2(15);
+BEGIN
+    SELECT RG_USUARIO INTO RG_G FROM USUARIO WHERE ID_USUARIO = USUARIO_ID; 
+    aux := SUBSTR(RG_G, 1, 2) || '.' || SUBSTR(RG_G, 3, 3) || '.' || SUBSTR(RG_G, 6, 3) || '-' || SUBSTR(RG_G, 9, 1);
+    RETURN aux;
+END;
+
+DECLARE
+    id_usuario NUMBER;
+    rg_formatar VARCHAR2(15);
+    cursor USERS is
+        SELECT ID_USUARIO FROM USUARIO;
+BEGIN
+    OPEN USERS;
+    LOOP
+        FETCH USERS INTO id_usuario;
+        EXIT WHEN USERS%NOTFOUND;
+        rg_formatar := formatar_RG(id_usuario);
+        DBMS_OUTPUT.PUT_LINE('ID_USUARIO ' || ID_USUARIO || ' ' || 'RG_USUARIO ' || rg_formatar);
+    END LOOP;
+    CLOSE USERS;
+END;
+
+--FUNCTION3
+
+CREATE OR REPLACE FUNCTION formatar_tel (USUARIO_ID IN NUMBER)
+    RETURN VARCHAR2
+AS
+    tel_t NUMBER;
+    aux VARCHAR2(15);
+BEGIN
+    SELECT TEL_USUARIO INTO tel_t FROM USUARIO WHERE ID_USUARIO = USUARIO_ID; 
+    aux := '(' || SUBSTR(tel_t, 1, 2) || ')' || SUBSTR(tel_t, 3, 4) || '-' || SUBSTR(tel_t, 7, 4);
+    RETURN aux;
+END;
+
+DECLARE
+    id_usuario NUMBER;
+    tel_formatar VARCHAR2(15);
+    cursor USERS is
+        SELECT ID_USUARIO FROM USUARIO;
+BEGIN
+    OPEN USERS;
+    LOOP
+        FETCH USERS INTO id_usuario;
+        EXIT WHEN USERS%NOTFOUND;
+        tel_formatar := formatar_tel(id_usuario);
+        DBMS_OUTPUT.PUT_LINE('ID_USUARIO ' || ID_USUARIO || ' ' || 'TEL_USUARIO ' || tel_formatar);
+    END LOOP;
+    CLOSE USERS;
+END;
+
+--FUNCTION4
+
+CREATE OR REPLACE FUNCTION formatar_nome (USUARIO_ID IN NUMBER)
+    RETURN VARCHAR2
+AS
+   aux1 varchar2(20);
+   aux2 varchar2(20);
+   aux varchar2 (40);
+BEGIN
+    SELECT FIRST_USUARIO, LAST_USUARIO INTO aux1,aux2 FROM USUARIO WHERE ID_USUARIO = USUARIO_ID; 
+    aux:= SUBSTR(aux1, 1, LENGTH(aux1)) || ' ' || SUBSTR(aux2, 1,  LENGTH(aux2));
+    RETURN aux;
+END;
+
+DECLARE
+    id_usuario NUMBER;
+    nome_formatar VARCHAR2(100);
+    cursor USERS is
+        SELECT ID_USUARIO FROM USUARIO;
+BEGIN
+    OPEN USERS;
+    LOOP
+        FETCH USERS INTO id_usuario;
+        EXIT WHEN USERS%NOTFOUND;
+        nome_formatar := formatar_nome(id_usuario);
+        DBMS_OUTPUT.PUT_LINE('ID_USUARIO ' || ID_USUARIO || '   ' || 'NOME_USUARIO_COMPLETO: ' || nome_formatar);
+    END LOOP;
+    CLOSE USERS;
+END;
